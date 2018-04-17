@@ -1,0 +1,30 @@
+apply plugin: 'java'
+
+configurations {
+    printoutsConfig
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    printoutsConfig 'org.apache.kafka:kafka-clients:1.1.0'
+}
+
+task print1 {
+    doLast {
+        def output = new ByteArrayOutputStream()
+
+        javaexec {
+            main = 'org.apache.kafka.clients.admin.AdminClientConfig'
+            args = ['--help']
+            classpath configurations.printoutsConfig
+            standardOutput output
+        }
+
+        println "Received\n\n${new String(output.toByteArray(), 'UTF-8')}"
+    }
+}
+
+task print2(type: pl.jch.PrintTask)
